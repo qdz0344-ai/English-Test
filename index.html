@@ -27,7 +27,8 @@
   </head>
   <body>
     <h1>English Test</h1>
-    <p id="test-instructions">Choose the correct answer for each question.</p>
+    <p id="test-instructions">Choose the correct answer for each question using the radio buttons.</p>
+    <p><strong>Note:</strong> This is a simple practice test intended for learning.</p>
 
     <form id="english-test" aria-describedby="test-instructions">
       <fieldset>
@@ -70,8 +71,7 @@
     </form>
 
     <script>
-      const encodedAnswers = "eyJxMSI6IkIiLCJxMiI6IkIiLCJxMyI6IkIiLCJxNCI6IkIiLCJxNSI6IkMifQ==";
-      const answers = JSON.parse(atob(encodedAnswers));
+      const answers = { q1: "B", q2: "B", q3: "B", q4: "B", q5: "C" };
       const form = document.getElementById("english-test");
       const result = document.getElementById("result");
 
