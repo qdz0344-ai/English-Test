@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem auto;
+        max-width: 760px;
+        line-height: 1.5;
+      }
+      fieldset {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+      #result {
+        margin-top: 1rem;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>English Test</h1>
+    <p>Choose the correct answer for each question.</p>
+
+    <form id="english-test">
+      <fieldset>
+        <legend>1. She ___ to school every day.</legend>
+        <label><input type="radio" name="q1" value="A" /> go</label><br />
+        <label><input type="radio" name="q1" value="B" /> goes</label><br />
+        <label><input type="radio" name="q1" value="C" /> going</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. They ___ playing football now.</legend>
+        <label><input type="radio" name="q2" value="A" /> is</label><br />
+        <label><input type="radio" name="q2" value="B" /> are</label><br />
+        <label><input type="radio" name="q2" value="C" /> am</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. I have ___ apple.</legend>
+        <label><input type="radio" name="q3" value="A" /> a</label><br />
+        <label><input type="radio" name="q3" value="B" /> an</label><br />
+        <label><input type="radio" name="q3" value="C" /> the</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. We ___ TV last night.</legend>
+        <label><input type="radio" name="q4" value="A" /> watch</label><br />
+        <label><input type="radio" name="q4" value="B" /> watched</label><br />
+        <label><input type="radio" name="q4" value="C" /> watching</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>5. Which word is a noun?</legend>
+        <label><input type="radio" name="q5" value="A" /> quickly</label><br />
+        <label><input type="radio" name="q5" value="B" /> blue</label><br />
+        <label><input type="radio" name="q5" value="C" /> teacher</label>
+      </fieldset>
+
+      <button type="submit">Submit Test</button>
+      <div id="result" aria-live="polite"></div>
+    </form>
+
+    <script>
+      const answers = { q1: "B", q2: "B", q3: "B", q4: "B", q5: "C" };
+      const form = document.getElementById("english-test");
+      const result = document.getElementById("result");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        let score = 0;
+        for (const [question, answer] of Object.entries(answers)) {
+          const selected = form.querySelector(`input[name="${question}"]:checked`);
+          if (selected && selected.value === answer) {
+            score += 1;
+          }
+        }
+
+        result.textContent = `Your score: ${score}/${Object.keys(answers).length}`;
+      });
+    </script>
+  </body>
+</html>
