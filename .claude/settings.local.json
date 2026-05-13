@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash *)",
+      "Bash(npm --version)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --name \"web-english\")",
+      "Bash(cd /tmp)",
+      "Bash(npx create-next-app@latest web-english --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npx next *)",
+      "Bash(node *)",
+      "Bash(npm rebuild *)",
+      "Bash(npm uninstall *)",
+      "Bash(npx vitest *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
