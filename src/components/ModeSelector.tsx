@@ -16,20 +16,20 @@ export default function ModeSelector({
   onSelect: (m: TestMode) => void;
 }) {
   return (
-    <div className="flex gap-3 justify-center flex-wrap">
+    <div className="flex gap-4 justify-center flex-wrap">
       {modes.map((m) => (
         <button
           key={m.key}
           onClick={() => onSelect(m.key)}
-          className={`p-4 rounded-xl border-2 text-center w-36 transition ${
+          className={`p-5 rounded-2xl border-2 text-center w-40 transition-all hover:scale-[1.02] ${
             selected === m.key
-              ? "border-indigo-500 bg-indigo-50"
-              : "border-gray-200 hover:border-gray-300"
+              ? "border-indigo-400 bg-indigo-50 shadow-md"
+              : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-sm"
           }`}
         >
-          <p className="text-2xl">{m.icon}</p>
-          <p className="font-bold mt-1">{m.label}</p>
-          <p className="text-xs text-gray-500">{m.desc}</p>
+          <p className="text-3xl mb-2">{m.icon}</p>
+          <p className="font-bold text-slate-800">{m.label}</p>
+          <p className="text-xs text-gray-500 mt-1">{m.desc}</p>
         </button>
       ))}
     </div>

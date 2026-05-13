@@ -9,6 +9,7 @@ import SpellingTest from "@/components/SpellingTest";
 import ListeningTest from "@/components/ListeningTest";
 import { getRandomWords } from "@/lib/vocab";
 import { generateQuestions } from "@/lib/test-engine";
+import { createClient } from "@/lib/supabase";
 import type { VocabSource, TestMode, TestQuestion, TestResult } from "@/types";
 
 function TestPageInner() {
@@ -16,6 +17,7 @@ function TestPageInner() {
   const searchParams = useSearchParams();
   const source = searchParams.get("source") as VocabSource;
   const mode = searchParams.get("mode") as TestMode;
+  const count = parseInt(searchParams.get("count") || "20", 10);
 
   const [questions, setQuestions] = useState<TestQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,11 +30,11 @@ function TestPageInner() {
       return;
     }
 
-    getRandomWords(source, 20).then((words) => {
-      const qs = generateQuestions(words, mode, 20);
+    getRandomWords(source, count).then((words) => {
+      const qs = generateQuestions(words, mode, count);
       setQuestions(qs);
     });
-  }, [source, mode, router]);
+  }, [source, mode, count, router]);
 
   const handleAnswer = useCallback(
     (answer: string, isCorrect: boolean) => {
@@ -52,6 +54,35 @@ function TestPageInner() {
           "testResults",
           JSON.stringify({ results: newResults, timeSec, source, mode })
         );
+
+        // Save to API if logged in
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          if (user) {
+            const correct = newResults.filter((r) => r.isCorrect).length;
+            const mistakes = newResults
+              .filter((r) => !r.isCorrect && r.userAnswer !== "")
+              .map((r) => ({
+                wordId: r.question.word.id,
+                word: r.question.word.word,
+              }));
+
+            fetch("/api/test/save", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                userId: user.id,
+                mode,
+                wordBank: source,
+                total: newResults.length,
+                correct,
+                timeSec,
+                mistakes,
+              }),
+            });
+          }
+        });
+
         router.push("/result");
       }
     },
@@ -75,21 +106,24 @@ function TestPageInner() {
   return (
     <>
       <Navbar loggedIn={false} />
-      <main className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+      <main className="max-w-2xl mx-auto px-4 py-6 space-y-4">
         <div className="flex justify-between items-center text-sm text-gray-500">
           <span>{source === "cet4" ? "CET-4" : source === "cet6" ? "CET-6" : "考研"} · {modeLabel}</span>
+          <span className="font-medium text-gray-700">第 {currentIndex + 1} / {questions.length} 题</span>
         </div>
         <ProgressBar current={currentIndex + 1} total={questions.length} />
 
-        {mode === "choice" && (
-          <ChoiceTest question={question} onAnswer={handleAnswer} />
-        )}
-        {mode === "spelling" && (
-          <SpellingTest question={question} onAnswer={handleAnswer} />
-        )}
-        {mode === "listening" && (
-          <ListeningTest question={question} onAnswer={handleAnswer} />
-        )}
+        <div className="bg-white rounded-2xl shadow-sm border p-6">
+          {mode === "choice" && (
+            <ChoiceTest question={question} onAnswer={handleAnswer} />
+          )}
+          {mode === "spelling" && (
+            <SpellingTest question={question} onAnswer={handleAnswer} />
+          )}
+          {mode === "listening" && (
+            <ListeningTest question={question} onAnswer={handleAnswer} />
+          )}
+        </div>
       </main>
     </>
   );
