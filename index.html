@@ -27,7 +27,7 @@
   </head>
   <body>
     <h1>English Test</h1>
-    <p>Choose the correct answer for each question.</p>
+    <p id="test-instructions">Choose the correct answer for each question.</p>
 
     <form id="english-test">
       <fieldset>
@@ -65,8 +65,8 @@
         <label><input type="radio" name="q5" value="C" /> teacher</label>
       </fieldset>
 
-      <button type="submit">Submit Test</button>
-      <div id="result" aria-live="polite"></div>
+      <button type="submit" aria-describedby="test-instructions">Submit Test</button>
+      <div id="result" role="status" aria-live="polite" aria-label="Test result"></div>
     </form>
 
     <script>
