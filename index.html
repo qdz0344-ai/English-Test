@@ -70,7 +70,8 @@
     </form>
 
     <script>
-      const answers = { q1: "B", q2: "B", q3: "B", q4: "B", q5: "C" };
+      const encodedAnswers = "eyJxMSI6IkIiLCJxMiI6IkIiLCJxMyI6IkIiLCJxNCI6IkIiLCJxNSI6IkMifQ==";
+      const answers = JSON.parse(atob(encodedAnswers));
       const form = document.getElementById("english-test");
       const result = document.getElementById("result");
 
@@ -78,11 +79,21 @@
         event.preventDefault();
 
         let score = 0;
+        let unanswered = 0;
         for (const [question, answer] of Object.entries(answers)) {
           const selected = form.querySelector(`input[name="${question}"]:checked`);
+          if (!selected) {
+            unanswered += 1;
+            continue;
+          }
           if (selected && selected.value === answer) {
             score += 1;
           }
+        }
+
+        if (unanswered > 0) {
+          result.textContent = `Please answer all questions before submitting (${unanswered} remaining).`;
+          return;
         }
 
         result.textContent = `Your score: ${score}/${Object.keys(answers).length}`;
